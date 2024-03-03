@@ -43,14 +43,14 @@ export default function Form({ persons, setPersons, setError }) {
     // Update
     const updatedPerson = await phonebookService.update(
       existing,
-      existing,
+      { name, number },
       setError
     );
 
     if (updatedPerson) {
       setPersons(
         persons.map((person) =>
-          person.id !== existing.id ? person : updatedPerson
+          person.id !== existing.id ? person : { id: existing.id, name, number }
         )
       );
 

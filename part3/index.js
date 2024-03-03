@@ -54,14 +54,12 @@ app.put("/api/persons/:id", async (request, response, next) => {
   try {
     const { name, number } = request.body;
     const id = request.params.id;
-
     const person = await Person.findByIdAndUpdate(
       id,
       { name, number },
       { new: true, runValidators: true, context: "query" }
     );
-
-    response.status(204).send(person);
+    response.status(200).json(person);
   } catch (error) {
     console.log(error);
     next(error);

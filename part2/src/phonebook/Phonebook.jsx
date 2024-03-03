@@ -9,7 +9,7 @@ function Phonebook() {
   const [search, setSearch] = useState("");
   const [persons, setPersons] = useState([]);
   const [error, setError] = useState(null);
-
+  console.log("persons", persons);
   const filteredPersons = persons.filter((person) =>
     person.name.toLowerCase().includes(search.toLowerCase())
   );
@@ -21,7 +21,6 @@ function Phonebook() {
       setPersons(res);
     })();
   }, []);
-
   return (
     <div>
       {error && (

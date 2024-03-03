@@ -29,10 +29,11 @@ export default function Form({ persons, setPersons, setError }) {
 
       //Create new person
       const created = await phonebookService.create(newPerson, setError);
-
-      setPersons(persons.concat(created));
-      setName("");
-      setNumber("");
+      if (created) {
+        setPersons(persons.concat(created));
+        setName("");
+        setNumber("");
+      }
     } catch (error) {
       console.error(error);
     }
@@ -40,18 +41,22 @@ export default function Form({ persons, setPersons, setError }) {
 
   const handleExisting = async (existing) => {
     // Update
-    await phonebookService.update(existing, existing, setError);
-
-    //Reasign person data and update state
-    const updatedPerson = { ...existing, number, name };
-    setPersons(
-      persons.map((person) =>
-        person.id !== existing.id ? person : updatedPerson
-      )
+    const updatedPerson = await phonebookService.update(
+      existing,
+      existing,
+      setError
     );
 
-    setName("");
-    setNumber("");
+    if (updatedPerson) {
+      setPersons(
+        persons.map((person) =>
+          person.id !== existing.id ? person : updatedPerson
+        )
+      );
+
+      setName("");
+      setNumber("");
+    }
   };
 
   return (

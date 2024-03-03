@@ -16,15 +16,13 @@ const getAll = async (setError) => {
 const create = async (newObject, setError) => {
   try {
     const res = await axios.post(baseUrl, newObject);
-
     setError({
       message: `${newObject.name} successfully created`,
       type: "success",
     });
     return res.data;
   } catch (error) {
-    setError({ message: `Error while creating`, type: "error" });
-    console.error(error);
+    setError({ message: error.response.data.error, type: "error" });
   }
 };
 
@@ -39,8 +37,7 @@ const update = async (person, newObject, setError) => {
     });
     return res.data;
   } catch (error) {
-    alert("Error updating note");
-    setError({ message: `Error while updating`, type: "error" });
+    setError({ message: error.response.data.error, type: "error" });
     console.error(error);
   }
 };

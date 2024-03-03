@@ -14,9 +14,10 @@ export default function Content({
     }
   };
 
+  if (persons.length === 0) return <p>Loading</p>;
   return filteredPersons.map((person) => (
-    <div style={{ display: "flex", flexDirection: "row" }}>
-      <p key={person.id}>
+    <div key={person.id} style={{ display: "flex", flexDirection: "row" }}>
+      <p>
         {person.name} {person.number}
       </p>
       <button onClick={() => handleDelete(person)}>delete</button>

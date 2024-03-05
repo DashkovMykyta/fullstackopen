@@ -9,6 +9,8 @@ const cors = require("cors");
 
 //? //////// ROUTES IMPORTS //////////
 const blogsRouter = require("./controllers/blogs");
+const usersRouter = require("./controllers/users");
+const loginRouter = require("./controllers/login");
 
 //? //////// MONGODB //////////
 mongoose.set("strictQuery", false);
@@ -26,12 +28,16 @@ mongoose
 
 //? //////// OTHER //////////
 app.use(cors());
+app.use(middleware.tokenExtractor);
 app.use(express.static("dist"));
 app.use(express.json());
 app.use(middleware.requestLogger);
+app.use(middleware.userExtractor);
 
 //? //////// ROUTES //////////
 app.use("/api/blogs", blogsRouter);
+app.use("/api/users", usersRouter);
+app.use("/api/login", loginRouter);
 
 //? //////// MIDDLEWARES //////////
 app.use(middleware.unknownEndpoint);

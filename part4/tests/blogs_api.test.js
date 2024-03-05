@@ -53,6 +53,7 @@ describe("adding and retrieving blogs", () => {
     };
     await api
       .post("/api/blogs")
+      .set("Authorization", "Bearer " + process.env.TEST_TOKEN)
       .send(newBlog)
       .expect(201)
       .expect("Content-Type", /application\/json/);
@@ -63,6 +64,24 @@ describe("adding and retrieving blogs", () => {
     assert(contents.includes("Third blog"));
   });
 
+  test("a blog can't be added without right token", async () => {
+    const newBlog = {
+      title: "Third blog",
+      author: "Third author",
+      url: "www.thirdurl.com",
+      likes: 3,
+    };
+    await api
+      .post("/api/blogs")
+      .send(newBlog)
+      .expect(401)
+      .expect("Content-Type", /application\/json/);
+
+    const res = await api.get("/api/blogs");
+
+    assert.strictEqual(res.body.length, initialBlogs.length);
+  });
+
   test("blog without likes sets to 0", async () => {
     const newBlog = {
       title: "Third blog",
@@ -70,7 +89,11 @@ describe("adding and retrieving blogs", () => {
       url: "www.thirdurl.com",
     };
 
-    await api.post("/api/blogs").send(newBlog).expect(201);
+    await api
+      .post("/api/blogs")
+      .set("Authorization", "Bearer " + process.env.TEST_TOKEN)
+      .send(newBlog)
+      .expect(201);
 
     const res = await api.get("/api/blogs");
     const addedBlog = res.body.find((r) => r.title === "Third blog");
@@ -82,7 +105,11 @@ describe("adding and retrieving blogs", () => {
       author: "Third author",
       likes: 3,
     };
-    await api.post("/api/blogs").send(newBlog).expect(400);
+    await api
+      .post("/api/blogs")
+      .set("Authorization", "Bearer " + process.env.TEST_TOKEN)
+      .send(newBlog)
+      .expect(400);
 
     const res = await api.get("/api/blogs");
     assert.strictEqual(res.body.length, initialBlogs.length);
@@ -93,10 +120,21 @@ describe("deleting blogs", () => {
   test("a blog can be deleted", async () => {
     const before = await api.get("/api/blogs");
 
-    await api.delete(`/api/blogs/${before.body[0].id}`).expect(204);
+    await api
+      .delete(`/api/blogs/${before.body[0].id}`)
+      .set("Authorization", "Bearer " + process.env.TEST_TOKEN)
+      .expect(204);
 
     const after = await api.get("/api/blogs");
     assert.strictEqual(after.body.length, before.body.length - 1);
+  });
+  test("a blog can't be deleted without right token", async () => {
+    const before = await api.get("/api/blogs");
+
+    await api.delete(`/api/blogs/${before.body[0].id}`).expect(401);
+
+    const after = await api.get("/api/blogs");
+    assert.strictEqual(after.body.length, before.body.length);
   });
 });
 

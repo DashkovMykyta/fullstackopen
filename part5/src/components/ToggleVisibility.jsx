@@ -17,7 +17,7 @@ function ToggleVisibility(props) {
 }
 
 ToggleVisibility.propTypes = {
-  buttonLabel: PropTypes.string.isRequired,
+  text: PropTypes.string.isRequired,
 };
 
 export default ToggleVisibility;

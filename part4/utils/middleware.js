@@ -38,17 +38,15 @@ const errorHandler = (error, request, response, next) => {
 };
 
 const tokenExtractor = (request, response, next) => {
-  console.log("here");
   const authorization = request.get("authorization");
   if (authorization && authorization.toLowerCase().startsWith("bearer ")) {
     request.token = authorization.substring("bearer ".length);
-    console.log("request.token", request.token);
   }
   next();
 };
 
 const userExtractor = (request, response, next) => {
-  const authorization = request.get("authorization");
+  const authorization = request.get("Authorization");
   if (authorization && authorization.toLowerCase().startsWith("bearer ")) {
     request.user = jwt.verify(
       authorization.substring("bearer ".length),

@@ -7,6 +7,16 @@ const setToken = (newToken) => {
   token = `Bearer ${newToken}`;
 };
 
+const config = () => {
+  const user = JSON.parse(window.localStorage.getItem("loggedBlogappUser"));
+  if (!user) return;
+  return {
+    headers: {
+      Authorization: token || user.token,
+    },
+  };
+};
+
 const getAll = async (setMessage) => {
   try {
     const request = await axios.get(baseUrl);
@@ -19,11 +29,7 @@ const getAll = async (setMessage) => {
 
 const create = async (newObject, setMessage) => {
   try {
-    const config = {
-      headers: { Authorization: token },
-    };
-
-    const response = await axios.post(baseUrl, newObject, config);
+    const response = await axios.post(baseUrl, newObject, config());
     setMessage("Successfully created");
     return response.data;
   } catch (error) {
@@ -34,10 +40,7 @@ const create = async (newObject, setMessage) => {
 
 const update = async (id, newObject) => {
   try {
-    const config = {
-      headers: { Authorization: token },
-    };
-    const response = await axios.put(`${baseUrl}/${id}`, newObject, config);
+    const response = await axios.put(`${baseUrl}/${id}`, newObject, config());
     return response.data;
   } catch (error) {
     console.log(error);
@@ -46,10 +49,9 @@ const update = async (id, newObject) => {
 
 const remove = async (id, setMessage) => {
   try {
-    await axios.delete(`${baseUrl}/${id}`, {
-      headers: { Authorization: token },
-    });
+    const res = await axios.delete(`${baseUrl}/${id}`, config());
     setMessage("Successfully deleted");
+    return res.data;
   } catch (error) {
     console.log(error);
     setMessage("Error deleting blog post");

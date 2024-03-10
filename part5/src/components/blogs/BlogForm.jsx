@@ -6,12 +6,16 @@ function BlogForm({ blogs, setBlogs, setMessage }) {
     title: "",
     author: "",
     url: "",
+    likes: 0,
   });
 
   const handleSunmit = async (e) => {
     try {
       e.preventDefault();
-      await blogService.create(blog, setMessage);
+      const created = await blogService.create(blog, setMessage);
+      blog["user"] = { id: created.user };
+      blog["id"] = created.id;
+
       setBlogs(blogs.concat(blog));
       setBlog({
         title: "",

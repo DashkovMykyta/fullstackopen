@@ -6,15 +6,24 @@ function Login({ setUser, setMessage }) {
   const [password, setPassword] = useState("");
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    const user = await loginService.login({ username, password }, setMessage);
-    window.localStorage.setItem("loggedBlogappUser", JSON.stringify(user));
-    setUser(user);
-    setUsername("");
-    setPassword("");
+    try {
+      e.preventDefault();
+      const user = await loginService.login({ username, password }, setMessage);
+      if (!user) {
+        return;
+      }
+      user["token"] = "bearer " + user.token;
+      window.localStorage.setItem("loggedBlogappUser", JSON.stringify(user));
+      setUser(user);
+      setUsername("");
+      setPassword("");
+    } catch (error) {
+      console.log(error);
+      setMessage("Wrong username or password");
+    }
   };
   return (
-    <form onSubmit={handleSubmit}>
+    <form name="Login" onSubmit={handleSubmit}>
       <h3>Login</h3>
       <label htmlFor="username">Username</label>
       <br />

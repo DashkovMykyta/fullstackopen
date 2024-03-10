@@ -5,6 +5,7 @@ import Login from "./components/Login";
 import BlogForm from "./components/blogs/BlogForm";
 import ToggleVisibility from "./components/ToggleVisibility";
 import BlogsCard from "./components/blogs/BlogsCard";
+import Register from "./components/Register";
 
 const App = () => {
   const [user, setUser] = useState(null);
@@ -19,7 +20,9 @@ const App = () => {
     if (loggedUser) {
       const user = JSON.parse(loggedUser);
       setUser(user);
-      blogService.setToken(user.token);
+      if (!user.token.toLowerCase().startsWith("bearer ") && user.token) {
+        blogService.setToken("bearer " + user.token);
+      }
     }
   }, []);
   useEffect(() => {
@@ -30,7 +33,8 @@ const App = () => {
   }, [message]);
   return (
     <div>
-      {message && <p>{message}</p>}
+      <h1>My app</h1>
+      <div className="error">{message}</div>
       {user ? (
         <>
           <p>{user.name} logged in</p>
@@ -39,9 +43,14 @@ const App = () => {
           <BlogsCard setMessage={setMessage} user={user} />
         </>
       ) : (
-        <ToggleVisibility text="Login">
-          <Login setUser={setUser} setMessage={setMessage} />
-        </ToggleVisibility>
+        <>
+          <ToggleVisibility text="Login">
+            <Login setUser={setUser} setMessage={setMessage} />
+          </ToggleVisibility>
+          <ToggleVisibility text="Register">
+            <Register setUser={setUser} setMessage={setMessage} />
+          </ToggleVisibility>
+        </>
       )}
     </div>
   );

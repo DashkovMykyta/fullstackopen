@@ -5,11 +5,12 @@ import {
 } from "../../context/AnecdotesContext";
 import { useNotification } from "../../context/NotificationContext";
 import { useNavigate } from "react-router-dom";
+import { useField } from "../hooks/useField";
 
 const CreateNew = (props) => {
-  const [content, setContent] = useState("");
-  const [author, setAuthor] = useState("");
-  const [info, setInfo] = useState("");
+  const content = useField("text");
+  const info = useField("text");
+  const author = useField("text");
 
   const { showNotification } = useNotification();
   const { setAnecdotes, anecdotes } = useContext(AnecdotesContext);
@@ -30,10 +31,17 @@ const CreateNew = (props) => {
     //   id: getId(),
     // });
     showNotification(`a new anecdote ${content} created!`);
-    setAuthor("");
-    setContent("");
-    setInfo("");
+    content.reset();
+    author.reset();
+    info.reset();
     navigate("/");
+  };
+
+  const handleReset = (e) => {
+    e.preventDefault();
+    content.reset();
+    author.reset();
+    info.reset();
   };
 
   return (
@@ -43,28 +51,27 @@ const CreateNew = (props) => {
         <div>
           content
           <input
-            name="content"
-            value={content}
-            onChange={(e) => setContent(e.target.value)}
+            value={content.value}
+            onChange={content.onChange}
+            type={content.type}
           />
         </div>
         <div>
           author
           <input
-            name="author"
-            value={author}
-            onChange={(e) => setAuthor(e.target.value)}
+            value={author.value}
+            onChange={author.onChange}
+            type={author.type}
           />
         </div>
         <div>
           url for more info
-          <input
-            name="info"
-            value={info}
-            onChange={(e) => setInfo(e.target.value)}
-          />
+          <input value={info.value} onChange={info.onChange} type={info.type} />
         </div>
         <button>create</button>
+        <button type="button" onClick={handleReset}>
+          reset
+        </button>
       </form>
     </div>
   );

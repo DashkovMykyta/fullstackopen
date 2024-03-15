@@ -1,25 +1,34 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import loginService from "../services/login";
+import { SessionContext } from "../context/SessionProvider";
+import { useField } from "../hooks/useField";
+import { useNotification } from "../context/NotificationProvider";
 
-function Login({ setUser, setMessage }) {
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
+function Login() {
+  const username = useField("text");
+  const password = useField("password");
+
+  const { setUser } = useContext(SessionContext);
+  const notification = useNotification();
 
   const handleSubmit = async (e) => {
     try {
       e.preventDefault();
-      const user = await loginService.login({ username, password }, setMessage);
+      const user = await loginService.login({
+        username: username.value,
+        password: password.value,
+      });
       if (!user) {
         return;
       }
       user["token"] = "bearer " + user.token;
       window.localStorage.setItem("loggedBlogappUser", JSON.stringify(user));
       setUser(user);
-      setUsername("");
-      setPassword("");
+      username.reset();
+      password.reset();
     } catch (error) {
       console.log(error);
-      setMessage("Wrong username or password");
+      notification("Wrong username or password");
     }
   };
   return (
@@ -28,19 +37,17 @@ function Login({ setUser, setMessage }) {
       <label htmlFor="username">Username</label>
       <br />
       <input
-        type="text"
-        name="username"
-        value={username}
-        onChange={(e) => setUsername(e.target.value)}
+        type={username.type}
+        value={username.value}
+        onChange={username.onChange}
       />{" "}
       <br />
       <label htmlFor="username">Password</label>
       <br />
       <input
-        type="password"
-        name="password"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
+        type={password.type}
+        value={password.value}
+        onChange={password.onChange}
       />{" "}
       <br />
       <button>Submit</button>

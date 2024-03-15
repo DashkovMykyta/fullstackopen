@@ -17,24 +17,21 @@ const config = () => {
   };
 };
 
-const getAll = async (setMessage) => {
+const getAll = async () => {
   try {
     const request = await axios.get(baseUrl);
     return request.data;
   } catch (error) {
     console.log(error);
-    setMessage("Error fetching blog posts");
   }
 };
 
-const create = async (newObject, setMessage) => {
+const create = async (newObject) => {
   try {
     const response = await axios.post(baseUrl, newObject, config());
-    setMessage("Successfully created");
     return response.data;
   } catch (error) {
     console.log(error);
-    setMessage("Error creating blog post");
   }
 };
 
@@ -47,14 +44,12 @@ const update = async (id, newObject) => {
   }
 };
 
-const remove = async (id, setMessage) => {
+const remove = async (id) => {
   try {
     const res = await axios.delete(`${baseUrl}/${id}`, config());
-    setMessage("Successfully deleted");
     return res.data;
   } catch (error) {
     console.log(error);
-    setMessage("Error deleting blog post");
   }
 };
 

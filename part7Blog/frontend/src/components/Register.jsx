@@ -1,18 +1,21 @@
 import React, { useState } from "react";
 import registerService from "../services/register";
 import loginService from "../services/login";
+import { useNotification } from "../context/NotificationProvider";
 
-function Register({ setUser, setMessage }) {
+function Register() {
   const [username, setUsername] = useState("");
   const [name, setName] = useState("");
   const [password, setPassword] = useState("");
+
+  const notification = useNotification();
 
   const handleSubmit = async (e) => {
     try {
       e.preventDefault();
       const registered = await registerService.register(
         { username, password, name },
-        setMessage
+        notification("Registered successfully")
       );
 
       //   if (registered) {
@@ -25,10 +28,10 @@ function Register({ setUser, setMessage }) {
       setUsername("");
       setPassword("");
       setName("");
-      setMessage("Registered successfully");
+
       //   }
     } catch (error) {
-      setMessage("Error while registering in");
+      notification("Error while registering in");
     }
   };
   return (

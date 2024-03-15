@@ -1,9 +1,11 @@
 import React, { useState } from "react";
 import blogService from "../../services/blogs";
 import { useNotification } from "../../context/NotificationProvider";
+import { useMutation, useQueryClient } from "react-query";
 
-function BlogForm({ blogs, setBlogs, setMessage }) {
+function BlogForm() {
   const notification = useNotification();
+  const queryClient = useQueryClient();
   const [blog, setBlog] = useState({
     title: "",
     author: "",
@@ -11,15 +13,26 @@ function BlogForm({ blogs, setBlogs, setMessage }) {
     likes: 0,
   });
 
+  const addBlog = useMutation({
+    mutationFn: blogService.create,
+    onError: (error) => {
+      console.log(error);
+    },
+    onSuccess: async (data) => {
+      const oldData = queryClient.getQueryData(["blogs"]);
+      queryClient.setQueryData(["blogs"], [...oldData, data]);
+      notification(`Blog ${data.title} by ${data.author} created`);
+    },
+  });
+
   const handleSunmit = async (e) => {
     try {
       e.preventDefault();
-      const created = await blogService.create(blog, setMessage);
+      const created = await blogService.create(blog);
       blog["user"] = { id: created.user };
       blog["id"] = created.id;
 
-      notification(`a new blog ${blog.title} by ${blog.author} added`);
-      setBlogs(blogs.concat(blog));
+      addBlog.mutate(blog);
       setBlog({
         title: "",
         author: "",

@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import Blog from "./components/blogs/Blog";
 import blogService from "./services/blogs";
 import Login from "./components/Login";
@@ -8,10 +8,10 @@ import BlogsCard from "./components/blogs/BlogsCard";
 import Register from "./components/Register";
 import { useNotification } from "./context/NotificationProvider";
 import Notification from "./components/Notification";
+import { SessionContext } from "./context/SessionProvider";
 
 const App = () => {
-  const [user, setUser] = useState(null);
-
+  const { user, setUser } = useContext(SessionContext);
   const notification = useNotification();
 
   const handleLogout = () => {
@@ -43,10 +43,10 @@ const App = () => {
       ) : (
         <>
           <ToggleVisibility text="Login">
-            <Login setUser={setUser} />
+            <Login />
           </ToggleVisibility>
           <ToggleVisibility text="Register">
-            <Register setUser={setUser} />
+            <Register />
           </ToggleVisibility>
         </>
       )}

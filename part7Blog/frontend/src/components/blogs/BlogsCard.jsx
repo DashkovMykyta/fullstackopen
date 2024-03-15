@@ -1,24 +1,52 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import ToggleVisibility from "../ToggleVisibility";
 import BlogForm from "./BlogForm";
 import Blog from "./Blog";
 import blogService from "../../services/blogs";
 import { useNotification } from "../../context/NotificationProvider";
-import { useQuery } from "react-query";
+import { useMutation, useQuery, useQueryClient } from "react-query";
 
 function BlogsCard({ user }) {
   const notification = useNotification();
+  const queryClient = useQueryClient;
 
   const { data, isLoading } = useQuery({
     queryFn: blogService.getAll,
-    queryKey: "blogs",
+    queryKey: ["blogs"],
   });
+
+  // add ne blog
+  const addBlog = useMutation({
+    mutationFn: blogService.update,
+    onError: (error) => {
+      console.log(error);
+    },
+    onSuccess: async (data) => {
+      queryClient.setQueryData(["blogs"], data);
+      notification(`Blog ${data.title} liked`);
+    },
+  });
+
+  // remove blog
+  const removeBlog = useMutation({
+    mutationFn: blogService.remove,
+    onError: (error) => {
+      console.log(error);
+    },
+    onSuccess: async (data) => {
+      const oldData = queryClient.getQueryData(["blogs"]);
+      queryClient.setQueryData(
+        ["blogs"],
+        oldData.filter((b) => b.id !== data.id)
+      );
+      notification(`Blog ${data.title} by ${data.author} deleted`);
+    },
+  });
+
   const handleChange = async (blog) => {
     try {
       blog.likes += 1;
-      await blogService.update(blog.id, blog);
-      notification(`Blog ${blog.title} by ${blog.author} liked`);
-      // setBlogs(blogs.map((b) => (b.id === blog.id ? blog : b)));
+      addBlog.mutate(blog.id, blog);
     } catch (error) {
       console.log(error);
     }
@@ -27,20 +55,18 @@ function BlogsCard({ user }) {
   const handleDelete = async (blog) => {
     try {
       if (window.confirm(`Remove blog ${blog.title} by ${blog.author}`)) {
-        await blogService.remove(blog.id);
-
-        notification(`Blog ${blog.title} by ${blog.author} deleted`);
-        // setBlogs(blogs.filter((b) => b.id !== blog.id));
+        removeBlog.mutate(blog);
       }
     } catch (error) {
       console.log(error);
     }
   };
 
+  if (isLoading) return <div>Loading...</div>;
   return (
     <>
       <ToggleVisibility text="Create New">
-        <BlogForm blogs={data} />
+        <BlogForm />
       </ToggleVisibility>
       {data.map((blog) => (
         <Blog

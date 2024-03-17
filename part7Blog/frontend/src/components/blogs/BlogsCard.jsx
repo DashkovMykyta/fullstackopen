@@ -8,7 +8,7 @@ import { useMutation, useQuery, useQueryClient } from "react-query";
 
 function BlogsCard({ user }) {
   const notification = useNotification();
-  const queryClient = useQueryClient;
+  const queryClient = useQueryClient();
 
   const { data, isLoading } = useQuery({
     queryFn: blogService.getAll,
@@ -16,14 +16,17 @@ function BlogsCard({ user }) {
   });
 
   // add ne blog
-  const addBlog = useMutation({
+  const updateBlog = useMutation({
     mutationFn: blogService.update,
     onError: (error) => {
       console.log(error);
     },
-    onSuccess: async (data) => {
-      queryClient.setQueryData(["blogs"], data);
-      notification(`Blog ${data.title} liked`);
+    onSuccess: async (d) => {
+      d["user"] = { id: d.user };
+      queryClient.setQueryData(["blogs"], (oldData) =>
+        oldData.map((b) => (b.id === d.id ? d : b))
+      );
+      notification(`Blog ${d.title} liked`);
     },
   });
 
@@ -33,20 +36,20 @@ function BlogsCard({ user }) {
     onError: (error) => {
       console.log(error);
     },
-    onSuccess: async (data) => {
+    onSuccess: async (id) => {
       const oldData = queryClient.getQueryData(["blogs"]);
       queryClient.setQueryData(
         ["blogs"],
-        oldData.filter((b) => b.id !== data.id)
+        oldData.filter((b) => b.id !== id)
       );
-      notification(`Blog ${data.title} by ${data.author} deleted`);
+      notification(`Blog deleted`);
     },
   });
 
   const handleChange = async (blog) => {
     try {
       blog.likes += 1;
-      addBlog.mutate(blog.id, blog);
+      updateBlog.mutate({ id: blog.id, data: blog });
     } catch (error) {
       console.log(error);
     }
@@ -65,10 +68,11 @@ function BlogsCard({ user }) {
   if (isLoading) return <div>Loading...</div>;
   return (
     <>
+      <h2>blogs</h2>
       <ToggleVisibility text="Create New">
         <BlogForm />
       </ToggleVisibility>
-      {data.map((blog) => (
+      {data?.map((blog) => (
         <Blog
           key={blog.id}
           blog={blog}

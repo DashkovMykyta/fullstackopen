@@ -8,6 +8,16 @@ blogsRouter.get("/", async (request, response) => {
   response.json(blogs);
 });
 
+blogsRouter.get("/:id", async (request, response) => {
+  try {
+    const res = await Blog.findById(request.params.id).populate("user");
+    console.log(res);
+    response.json(res);
+  } catch (error) {
+    console.log(error);
+  }
+});
+
 blogsRouter.post("/", async (request, response) => {
   const userReq = request.user;
 
@@ -16,7 +26,7 @@ blogsRouter.post("/", async (request, response) => {
   }
   const user = await User.findById(userReq.id);
 
-  const blog = new Blog({ ...request.body, user: user.id });
+  const blog = new Blog({ ...request.body.data, user: user.id });
   const res = await blog.save();
 
   user.blogs = user.blogs.concat(res.id);
@@ -41,11 +51,13 @@ blogsRouter.delete("/:id", async (request, response) => {
 });
 
 blogsRouter.put("/:id", async (request, response) => {
+  console.log("fff", request.body);
   delete request.body.user;
-  await Blog.findByIdAndUpdate(request.params.id, request.body, {
+  const res = await Blog.findByIdAndUpdate(request.params.id, request.body, {
     new: true,
   });
-  response.status(200).end();
+  console.log(res);
+  response.status(200).json(res);
 });
 
 module.exports = blogsRouter;

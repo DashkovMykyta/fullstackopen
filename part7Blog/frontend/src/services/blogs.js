@@ -26,31 +26,41 @@ const getAll = async () => {
   }
 };
 
-const create = async (newObject) => {
+const get = async (id) => {
   try {
-    const response = await axios.post(baseUrl, newObject, config());
+    const request = await axios.get(`${baseUrl}/${id}`);
+    return request.data;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+const create = async (data) => {
+  try {
+    const response = await axios.post(baseUrl, data, config());
+    console.log("response", response.data);
     return response.data;
   } catch (error) {
     console.log(error);
   }
 };
 
-const update = async (id, newObject) => {
+const update = async ({ id, data }) => {
   try {
-    const response = await axios.put(`${baseUrl}/${id}`, newObject, config());
+    const response = await axios.put(`${baseUrl}/${id}`, data, config());
     return response.data;
   } catch (error) {
     console.log(error);
   }
 };
 
-const remove = async (id) => {
+const remove = async (blog) => {
   try {
-    const res = await axios.delete(`${baseUrl}/${id}`, config());
-    return res.data;
+    const res = await axios.delete(`${baseUrl}/${blog.id}`, config());
+    return blog.id;
   } catch (error) {
     console.log(error);
   }
 };
 
-export default { getAll, setToken, create, update, remove };
+export default { getAll, setToken, create, update, remove, get };

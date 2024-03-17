@@ -9,10 +9,18 @@ import Register from "./components/Register";
 import { useNotification } from "./context/NotificationProvider";
 import Notification from "./components/Notification";
 import { SessionContext } from "./context/SessionProvider";
+import Users from "./components/users/Users";
+import { Link } from "react-router-dom";
+import { Routes, Route, useMatch } from "react-router-dom";
+import UserCard from "./components/users/UserCard";
+import SoloBlogCard from "./components/blogs/SoloBlogCard";
 
 const App = () => {
   const { user, setUser } = useContext(SessionContext);
   const notification = useNotification();
+
+  const matchUser = useMatch("/users/:id");
+  const matchBlog = useMatch("/blogs/:id");
 
   const handleLogout = () => {
     window.localStorage.removeItem("loggedBlogappUser");
@@ -31,14 +39,37 @@ const App = () => {
   }, []);
   return (
     <div>
-      <h1>My app</h1>
-      <Notification />
       {user ? (
         <>
-          <p>{user.name} logged in</p>
-          <button onClick={handleLogout}>logout</button>
-          <h2>blogs</h2>
-          <BlogsCard user={user} />
+          <nav
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              gap: 20,
+              backgroundColor: "lightgray",
+            }}
+          >
+            <Link to="/">home</Link>
+            <Link to="/users">users</Link>
+
+            <p>{user.name} logged in</p>
+            <button onClick={handleLogout}>logout</button>
+          </nav>
+          <Notification />
+          <h1>My app</h1>
+
+          <Routes>
+            <Route path="/" element={<BlogsCard user={user} />} />
+            <Route
+              path="/blogs/:id"
+              element={<SoloBlogCard id={matchBlog?.params?.id} />}
+            />
+            <Route path="/users" element={<Users />} />
+            <Route
+              path="/users/:id"
+              element={<UserCard id={matchUser?.params?.id} />}
+            />
+          </Routes>
         </>
       ) : (
         <>

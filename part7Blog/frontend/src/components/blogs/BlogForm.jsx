@@ -19,6 +19,7 @@ function BlogForm() {
       console.log(error);
     },
     onSuccess: async (data) => {
+      data["user"] = { id: data.user };
       const oldData = queryClient.getQueryData(["blogs"]);
       queryClient.setQueryData(["blogs"], [...oldData, data]);
       notification(`Blog ${data.title} by ${data.author} created`);
@@ -28,11 +29,7 @@ function BlogForm() {
   const handleSunmit = async (e) => {
     try {
       e.preventDefault();
-      const created = await blogService.create(blog);
-      blog["user"] = { id: created.user };
-      blog["id"] = created.id;
-
-      addBlog.mutate(blog);
+      addBlog.mutate({ data: blog });
       setBlog({
         title: "",
         author: "",

@@ -3,7 +3,8 @@ import loginService from "../services/login";
 import { SessionContext } from "../context/SessionProvider";
 import { useField } from "../hooks/useField";
 import { useNotification } from "../context/NotificationProvider";
-
+import { Button } from "./ui/button";
+import { Input } from "./ui/input";
 function Login() {
   const username = useField("text");
   const password = useField("password");
@@ -36,7 +37,7 @@ function Login() {
       <h3>Login</h3>
       <label htmlFor="username">Username</label>
       <br />
-      <input
+      <Input
         type={username.type}
         value={username.value}
         onChange={username.onChange}
@@ -44,13 +45,13 @@ function Login() {
       <br />
       <label htmlFor="username">Password</label>
       <br />
-      <input
+      <Input
         type={password.type}
         value={password.value}
         onChange={password.onChange}
       />{" "}
       <br />
-      <button>Submit</button>
+      <Button>Submit</Button>
     </form>
   );
 }

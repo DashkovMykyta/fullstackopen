@@ -4,6 +4,7 @@ import { NotificationProvider } from "./context/NotificationProvider";
 import { QueryClient, QueryClientProvider } from "react-query";
 import SessionProvider from "./context/SessionProvider";
 import { BrowserRouter } from "react-router-dom";
+import "./index.css";
 
 const queryClient = new QueryClient();
 

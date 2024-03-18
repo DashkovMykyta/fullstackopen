@@ -2,7 +2,8 @@ import React, { useState } from "react";
 import registerService from "../services/register";
 import loginService from "../services/login";
 import { useNotification } from "../context/NotificationProvider";
-
+import { Button } from "./ui/button";
+import { Input } from "./ui/input";
 function Register() {
   const [username, setUsername] = useState("");
   const [name, setName] = useState("");
@@ -39,7 +40,7 @@ function Register() {
       <h3>Registration</h3>
       <label htmlFor="username">Username</label>
       <br />
-      <input
+      <Input
         type="text"
         name="username"
         value={username}
@@ -48,7 +49,7 @@ function Register() {
       <br />
       <label htmlFor="name">Name</label>
       <br />
-      <input
+      <Input
         type="text"
         name="name"
         value={name}
@@ -57,14 +58,14 @@ function Register() {
       <br />
       <label htmlFor="username">Password</label>
       <br />
-      <input
+      <Input
         type="password"
         name="password"
         value={password}
         onChange={(e) => setPassword(e.target.value)}
       />{" "}
       <br />
-      <button>Submit</button>
+      <Button>Submit</Button>
     </form>
   );
 }

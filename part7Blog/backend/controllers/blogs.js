@@ -10,8 +10,9 @@ blogsRouter.get("/", async (request, response) => {
 
 blogsRouter.get("/:id", async (request, response) => {
   try {
-    const res = await Blog.findById(request.params.id).populate("user");
-    console.log(res);
+    const res = await Blog.findById(request.params.id)
+      .populate("user")
+      .populate("comments");
     response.json(res);
   } catch (error) {
     console.log(error);
@@ -51,12 +52,10 @@ blogsRouter.delete("/:id", async (request, response) => {
 });
 
 blogsRouter.put("/:id", async (request, response) => {
-  console.log("fff", request.body);
   delete request.body.user;
   const res = await Blog.findByIdAndUpdate(request.params.id, request.body, {
     new: true,
   });
-  console.log(res);
   response.status(200).json(res);
 });
 

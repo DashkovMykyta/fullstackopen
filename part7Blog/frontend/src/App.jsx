@@ -14,7 +14,9 @@ import { Link } from "react-router-dom";
 import { Routes, Route, useMatch } from "react-router-dom";
 import UserCard from "./components/users/UserCard";
 import SoloBlogCard from "./components/blogs/SoloBlogCard";
+import { Card, CardContent } from "./components/ui/card";
 
+import "./index.css";
 const App = () => {
   const { user, setUser } = useContext(SessionContext);
   const notification = useNotification();
@@ -38,7 +40,7 @@ const App = () => {
     }
   }, []);
   return (
-    <div>
+    <div className="w-full h-full min-h-screen">
       {user ? (
         <>
           <nav
@@ -49,7 +51,9 @@ const App = () => {
               backgroundColor: "lightgray",
             }}
           >
-            <Link to="/">home</Link>
+            <Link className="py-1 px-2 hover:bg-gray-500" to="/">
+              home
+            </Link>
             <Link to="/users">users</Link>
 
             <p>{user.name} logged in</p>
@@ -72,14 +76,14 @@ const App = () => {
           </Routes>
         </>
       ) : (
-        <>
+        <div>
           <ToggleVisibility text="Login">
             <Login />
           </ToggleVisibility>
           <ToggleVisibility text="Register">
             <Register />
           </ToggleVisibility>
-        </>
+        </div>
       )}
     </div>
   );

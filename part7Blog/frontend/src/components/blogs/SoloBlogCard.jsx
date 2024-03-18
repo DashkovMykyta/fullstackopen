@@ -1,6 +1,7 @@
 import React from "react";
 import blogService from "../../services/blogs";
 import { useQuery } from "react-query";
+import Comments from "../Comments";
 
 function SoloBlogCard({ id }) {
   const { data, isLoading } = useQuery({
@@ -15,6 +16,7 @@ function SoloBlogCard({ id }) {
       <a href={data.url}>{data.url}</a>
       <p>{data.likes} likes</p>
       <p>added by {data.user.username}</p>
+      <Comments blog={data} />
     </div>
   );
 }

@@ -38,7 +38,6 @@ const get = async (id) => {
 const create = async (data) => {
   try {
     const response = await axios.post(baseUrl, data, config());
-    console.log("response", response.data);
     return response.data;
   } catch (error) {
     console.log(error);
@@ -54,6 +53,16 @@ const update = async ({ id, data }) => {
   }
 };
 
+const addComment = async (data) => {
+  try {
+    const response = await axios.post(`/api/comments`, data, config());
+
+    return response.data;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 const remove = async (blog) => {
   try {
     const res = await axios.delete(`${baseUrl}/${blog.id}`, config());
@@ -63,4 +72,4 @@ const remove = async (blog) => {
   }
 };
 
-export default { getAll, setToken, create, update, remove, get };
+export default { getAll, setToken, create, update, remove, get, addComment };

@@ -1,12 +1,14 @@
-import React from "react";
+import React, { useState } from "react";
 import ToggleVisibility from "../ToggleVisibility";
 import BlogForm from "./BlogForm";
 import Blog from "./Blog";
 import blogService from "../../services/blogs";
 import { useNotification } from "../../context/NotificationProvider";
 import { useMutation, useQuery, useQueryClient } from "react-query";
+import AppHeader from "../AppHeader";
 
 function BlogsCard({ user }) {
+  const [visible, setVisible] = useState(false);
   const notification = useNotification();
   const queryClient = useQueryClient();
 
@@ -68,19 +70,26 @@ function BlogsCard({ user }) {
   if (isLoading) return <div>Loading...</div>;
   return (
     <>
-      <h2>blogs</h2>
-      <ToggleVisibility text="Create New">
-        <BlogForm />
-      </ToggleVisibility>
-      {data?.map((blog) => (
-        <Blog
-          key={blog.id}
-          blog={blog}
-          handleChange={handleChange}
-          handleDelete={handleDelete}
-          user={user}
-        />
-      ))}
+      <AppHeader
+        text="Blogs"
+        description={"Create, read and manage blogs"}
+        btnText={visible ? "Close" : "Create new"}
+        onClick={() => setVisible(!visible)}
+      />
+
+      {visible && <BlogForm />}
+
+      <div className="grid grid-cols-4 gap-3">
+        {data?.map((blog) => (
+          <Blog
+            key={blog.id}
+            blog={blog}
+            handleChange={handleChange}
+            handleDelete={handleDelete}
+            user={user}
+          />
+        ))}
+      </div>
     </>
   );
 }

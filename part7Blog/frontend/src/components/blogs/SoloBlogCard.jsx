@@ -12,10 +12,17 @@ function SoloBlogCard({ id }) {
   if (isLoading) return <div>Loading...</div>;
   return (
     <div>
-      <h3>{data.title}</h3>
-      <a href={data.url}>{data.url}</a>
-      <p>{data.likes} likes</p>
-      <p>added by {data.user.username}</p>
+      <div className="flex flex-row justify-between items-center">
+        <h3 className="text-2xl font-semibold">{data.title}</h3>
+        <p className="">
+          {data.likes}
+          <span className="text-red-500 text-md ml-1">♡</span>
+        </p>
+      </div>
+      <p className="text-gray-500 mb-4">added by {data.user.username}</p>
+      <a href={data.url} className="hover:underline">
+        {data.url}
+      </a>
       <Comments blog={data} />
     </div>
   );

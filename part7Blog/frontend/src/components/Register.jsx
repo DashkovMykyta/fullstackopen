@@ -37,7 +37,7 @@ function Register() {
   };
   return (
     <form onSubmit={handleSubmit}>
-      <h3>Registration</h3>
+      <h3 className="text-center font-semibold mb-4 text-xl">Registration</h3>
       <label htmlFor="username">Username</label>
       <br />
       <Input
@@ -65,7 +65,7 @@ function Register() {
         onChange={(e) => setPassword(e.target.value)}
       />{" "}
       <br />
-      <Button>Submit</Button>
+      <Button className="w-full">Submit</Button>
     </form>
   );
 }

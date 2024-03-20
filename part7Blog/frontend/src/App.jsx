@@ -14,9 +14,11 @@ import { Link } from "react-router-dom";
 import { Routes, Route, useMatch } from "react-router-dom";
 import UserCard from "./components/users/UserCard";
 import SoloBlogCard from "./components/blogs/SoloBlogCard";
-import { Card, CardContent } from "./components/ui/card";
 
-import "./index.css";
+import LoginRegister from "./components/LoginRegister";
+import "./App.css";
+import Nav from "./components/Nav";
+
 const App = () => {
   const { user, setUser } = useContext(SessionContext);
   const notification = useNotification();
@@ -26,6 +28,7 @@ const App = () => {
 
   const handleLogout = () => {
     window.localStorage.removeItem("loggedBlogappUser");
+    window.location.reload();
   };
 
   useEffect(() => {
@@ -39,53 +42,27 @@ const App = () => {
       }
     }
   }, []);
-  return (
-    <div className="w-full h-full min-h-screen">
-      {user ? (
-        <>
-          <nav
-            style={{
-              display: "flex",
-              flexDirection: "row",
-              gap: 20,
-              backgroundColor: "lightgray",
-            }}
-          >
-            <Link className="py-1 px-2 hover:bg-gray-500" to="/">
-              home
-            </Link>
-            <Link to="/users">users</Link>
-
-            <p>{user.name} logged in</p>
-            <button onClick={handleLogout}>logout</button>
-          </nav>
-          <Notification />
-          <h1>My app</h1>
-
-          <Routes>
-            <Route path="/" element={<BlogsCard user={user} />} />
-            <Route
-              path="/blogs/:id"
-              element={<SoloBlogCard id={matchBlog?.params?.id} />}
-            />
-            <Route path="/users" element={<Users />} />
-            <Route
-              path="/users/:id"
-              element={<UserCard id={matchUser?.params?.id} />}
-            />
-          </Routes>
-        </>
-      ) : (
-        <div>
-          <ToggleVisibility text="Login">
-            <Login />
-          </ToggleVisibility>
-          <ToggleVisibility text="Register">
-            <Register />
-          </ToggleVisibility>
-        </div>
-      )}
-    </div>
+  return user ? (
+    <>
+      <Nav user={user} handleLogout={handleLogout} />
+      <div className="px-16">
+        <Notification />
+        <Routes>
+          <Route path="/" element={<BlogsCard user={user} />} />
+          <Route
+            path="/blogs/:id"
+            element={<SoloBlogCard id={matchBlog?.params?.id} />}
+          />
+          <Route path="/users" element={<Users />} />
+          <Route
+            path="/users/:id"
+            element={<UserCard id={matchUser?.params?.id} />}
+          />
+        </Routes>
+      </div>
+    </>
+  ) : (
+    <LoginRegister />
   );
 };
 

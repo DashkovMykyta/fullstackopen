@@ -3,6 +3,8 @@ import { useField } from "../hooks/useField";
 import { useMutation } from "react-query";
 import blogService from "../services/blogs";
 import { useNotification } from "../context/NotificationProvider";
+import { Input } from "./ui/input";
+import { Button } from "./ui/button";
 
 export default function Comments({ blog }) {
   const [comments, setComments] = useState(blog?.comments || []);
@@ -12,7 +14,7 @@ export default function Comments({ blog }) {
   const addComment = useMutation({
     mutationFn: blogService.addComment,
     onSuccess: (response) => {
-      setComments(comments.concat(response));
+      setComments(comments.concat({ content: response.content }));
       notification("comment added");
       content.reset();
     },
@@ -34,19 +36,25 @@ export default function Comments({ blog }) {
   };
 
   return (
-    <div>
+    <div className="mt-8">
       <h2>Comments</h2>
-      <form onSubmit={handleSubmit}>
-        <input
+      <form onSubmit={handleSubmit} className="flex flex-row gap-2">
+        <Input
           type={content.type}
           value={content.value}
           onChange={content.onChange}
         />
-        <button>add comment</button>
+        <Button>Add</Button>
       </form>
-      <ul>
-        {comments.map((comment, index) => (
-          <li key={index}>{comment.content}</li>
+
+      <ul className="w-full mt-4 text-sm font-medium">
+        {comments?.map((comment, index) => (
+          <li
+            key={comment.index}
+            className="w-full px-4 py-2 border-b border-gray-200 rounded-t-lg dark:border-gray-600"
+          >
+            {comment.content}
+          </li>
         ))}
       </ul>
     </div>

@@ -12,7 +12,7 @@ commentRouter.post("/", async (request, response) => {
     const blog = await Blog.findById(body.blogId);
     blog.comments = blog.comments.concat(res.id);
     await blog.save();
-
+    console.log(res);
     response.status(201).json(res);
   } catch (error) {
     console.log(error);

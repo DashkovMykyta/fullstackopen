@@ -34,7 +34,7 @@ function Login() {
   };
   return (
     <form name="Login" onSubmit={handleSubmit}>
-      <h3>Login</h3>
+      <h3 className="text-center font-semibold mb-4 text-xl">Login</h3>
       <label htmlFor="username">Username</label>
       <br />
       <Input
@@ -51,7 +51,7 @@ function Login() {
         onChange={password.onChange}
       />{" "}
       <br />
-      <Button>Submit</Button>
+      <Button className="w-full">Submit</Button>
     </form>
   );
 }

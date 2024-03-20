@@ -50,7 +50,7 @@ export default function Comments({ blog }) {
       <ul className="w-full mt-4 text-sm font-medium">
         {comments?.map((comment, index) => (
           <li
-            key={comment.index}
+            key={index}
             className="w-full px-4 py-2 border-b border-gray-200 rounded-t-lg dark:border-gray-600"
           >
             {comment.content}

@@ -51,7 +51,7 @@ const App = () => {
           <Route path="/" element={<BlogsCard user={user} />} />
           <Route
             path="/blogs/:id"
-            element={<SoloBlogCard id={matchBlog?.params?.id} />}
+            element={<SoloBlogCard id={matchBlog?.params?.id} user={user} />}
           />
           <Route path="/users" element={<Users />} />
           <Route

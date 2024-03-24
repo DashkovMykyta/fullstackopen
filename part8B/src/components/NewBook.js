@@ -9,18 +9,18 @@ const NewBook = (props) => {
   const [genre, setGenre] = useState("");
   const [genres, setGenres] = useState([]);
 
-  const [createBook] = useMutation(CREATE_BOOK, {
+  const [addBook] = useMutation(CREATE_BOOK, {
     onError: (error) => {
-      props.setMessage(error.graphQLErrors[0].message);
       console.log(error);
+      props.setMessage(error.graphQLErrors[0].message);
     },
-    refetchQueries: [{ query: GET_ALL_BOOKS }],
+    // refetchQueries: [{ query: GET_ALL_BOOKS }],
   });
 
   const submit = async (event) => {
     event.preventDefault();
 
-    createBook({
+    addBook({
       variables: { title, author, published: Number(published), genres },
     });
     setTitle("");

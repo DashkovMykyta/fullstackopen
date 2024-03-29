@@ -34,7 +34,7 @@ patientsRouter.post("/:id/codes", (req, res) => {
   if (patient) {
     const updatedPatient = {
       ...patient,
-      diagnosisCodes: patient.diagnosisCodes.concat(req.body.code),
+      entries: patient?.entries[0]?.diagnosisCodes?.concat(req.body.code),
     };
     res.send(updatedPatient).status(200);
   } else {

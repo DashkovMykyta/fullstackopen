@@ -9,7 +9,7 @@ import patients from "../services/patients";
 function PatientPage({ patient }: { patient: Patient | null | undefined }) {
   // const [codes, setCodes] = useState<Diagnosis[]>([]);
   const [codeData, setCodeData] = useState<Diagnosis[] | null>(null);
-
+  console.log("patient", patient);
   const handleNew = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {

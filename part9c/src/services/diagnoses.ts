@@ -4,6 +4,9 @@ const diagnosesService = {
   getDiagnoses(): Diagnosis[] {
     return data;
   },
+  getDiagnosis(code: string): Diagnosis | undefined {
+    return data.find((d) => d.code === code);
+  },
 };
 
 export default diagnosesService;

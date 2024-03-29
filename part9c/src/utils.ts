@@ -1,4 +1,4 @@
-import { Genders, NewPatient, UnknownPatient } from "./types";
+import { Entry, Genders, NewPatient, UnknownPatient } from "./types";
 
 const toNewPatient = (object: unknown): NewPatient => {
   if (typeof object !== "object" || object === null || Array.isArray(object)) {
@@ -12,6 +12,7 @@ const toNewPatient = (object: unknown): NewPatient => {
     ssn: parseString(patientObject.ssn),
     gender: parseGender(patientObject.gender),
     occupation: parseString(patientObject.occupation),
+    entries: parseEntries(patientObject.entries),
   };
 
   return newPatient;
@@ -36,6 +37,13 @@ const parseGender = (gender: unknown): Genders => {
     throw new Error("Incorrect or missing gender: " + gender);
   }
   return gender;
+};
+
+const parseEntries = (entries: unknown): Entry[] => {
+  if (!entries || !Array.isArray(entries)) {
+    throw new Error("Incorrect or missing entries: " + entries);
+  }
+  return entries;
 };
 
 const parseString = (string: unknown): string => {
